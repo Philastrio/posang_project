@@ -93,6 +93,7 @@ const Wrapper = styled.div`
 
 export default withRouter(({ history }) => {
   const search = useInput("");
+
   const onSearchSubmit = e => {
     e.preventDefault();
     history.push(`/search?term=${search.value}`); //모든 검색(search)로 간다. 여기서 로그인됐으면 모든 검색/로그아웃이면 일반검색?

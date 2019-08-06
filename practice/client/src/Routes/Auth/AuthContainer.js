@@ -10,6 +10,8 @@ import {
 } from "./AuthQueries";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useQuery } from "react-apollo-hooks";
+import { ME } from "../../sharedQueries";
 
 export default () => {
   const [action, setAction] = useState("logIn");
@@ -49,8 +51,11 @@ export default () => {
     position: toast.POSITION.TOP_RIGHT
   };
 
+  const { data } = useQuery(ME);
+
   const onSubmit = async e => {
     e.preventDefault();
+
     if (action === "logIn") {
       if (email.value !== "") {
         try {
@@ -75,6 +80,24 @@ export default () => {
         }
       } else {
         toast.error("이메일을 입력해주세요", { toastPosition });
+      }
+    } else if (action === "confirm") {
+      if (secret.value !== "") {
+        try {
+          const {
+            data: { confirmSecret: token }
+          } = await confirmSecretMutation();
+          if (token !== "" && token !== undefined) {
+            localLogInMutation({ variables: { token } });
+            return data;
+          } else {
+            throw Error();
+          }
+        } catch {
+          toast.error("비밀암호를 확인할 수 없습니다. 다시 한번 확인해주세요", {
+            toastPosition
+          });
+        }
       }
     } else if (action === "signUp") {
       if (
@@ -101,23 +124,6 @@ export default () => {
         }
       } else {
         toast.error("모든 칸을 채워야 합니다.");
-      }
-    } else if (action === "confirm") {
-      if (secret.value !== "") {
-        try {
-          const {
-            data: { confirmSecret: token }
-          } = await confirmSecretMutation();
-          if (token !== "" && token !== undefined) {
-            localLogInMutation({ variables: { token } });
-          } else {
-            throw Error();
-          }
-        } catch {
-          toast.error("비밀암호를 확인할 수 없습니다. 다시 한번 확인해주세요", {
-            toastPosition
-          });
-        }
       }
     }
   };

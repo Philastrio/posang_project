@@ -1,0 +1,48 @@
+type Admin {
+  id: ID!
+  email: String!
+  loginAdminSecret: String
+  posts: [Post!]!
+  createdAt: String
+  updatedAt: String
+}
+
+type User {
+  id: ID!
+  userName: String!
+  email: String!
+  position: String
+  belongTo: String
+  Rank: String
+  posts: [Post!]!
+  loginSecret: String
+  isSelf: Boolean! #prisma에는 등록안하고 여기에만 한다. 대신 computed.js(User.js)에 적어준다.
+  token: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Post {
+  id: ID!
+  prizeNum: String!
+  userName: User!
+  winnerName: String!
+  birth: String!
+  address: String!
+  docNum: Int!
+  prizeCategory: String!
+  prizeRank: String!
+  prizeDate: String!
+  contribution: String!
+  belongTo: String
+  eventName: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Win {
+  id: ID!
+  winnerName: [Post!]!
+  createdAt: String
+  updatedAt: String
+}
